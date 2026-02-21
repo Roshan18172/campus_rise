@@ -6,55 +6,59 @@ const LoginPage = () => {
     const [role, setRole] = useState("student");
 
     return (
-        <div
-            className="d-flex align-items-center justify-content-center"
-            style={{
-                minHeight: "100vh",
-                background: "linear-gradient(135deg, #2563EB, #10B981)",
-            }}
-        >
-            <div className="card shadow-lg p-4 border-0" style={{ width: "400px" }}>
-                <div className="text-center mb-3">
-                    <img src={campusriselogo} alt="CampusRise" width="80" />
-                    <h4 className="fw-bold mt-2">Login to CampusRise</h4>
+        <div className="container-fluid min-vh-100 d-flex align-items-center justify-content-center "
+        style={{
+                    background: "linear-gradient(145deg, #225fd0, #139344,#1c2d1d)",
+                    minHeight: "65vh", marginTop: "-35px"
+                }}>
+            <div className="row w-100 shadow-lg rounded overflow-hidden" style={{ maxWidth: "800px",position:"fixed" }}>
+
+                {/* LEFT PANEL */}
+                <div className="col-md-6 d-none d-md-flex flex-column justify-content-center align-items-center text-white bg-dark p-5 text-center">
+                    <img src={campusriselogo} alt="CampusRise" width="350" className="mb-3" />
+                    <h3 className="fw-bold">Welcome Back</h3>
+                    <p>Don’t have an account?</p>
+                    <Link to="/register" className="btn btn-outline-light px-4">
+                        Sign up
+                    </Link>
                 </div>
 
-                <form>
-                    {/* Role Selector */}
-                    <div className="mb-3">
-                        <label className="form-label">Login As</label>
-                        <select
-                            className="form-select"
-                            value={role}
-                            onChange={(e) => setRole(e.target.value)}
-                        >
-                            <option value="student">🎓 Student</option>
-                            <option value="company">🏢 Company</option>
-                            <option value="college">🏫 College</option>
-                        </select>
+                {/* RIGHT PANEL */}
+                <div className="col-md-6 bg-white p-4">
+                    <div className="text-center mb-3">
+                        <h4 className="fw-bold">Login to CampusRise</h4>
                     </div>
 
-                    {/* Email or Mobile */}
-                    <div className="mb-3">
-                        <label className="form-label">Email or Mobile</label>
-                        <input type="text" className="form-control" />
-                    </div>
+                    <form>
+                        {/* Role */}
+                        <div className="mb-3">
+                            <label className="form-label">Login As</label>
+                            <select
+                                className="form-select"
+                                value={role}
+                                onChange={(e) => setRole(e.target.value)}
+                            >
+                                <option value="student">🎓 Student</option>
+                                <option value="company">🏢 Company</option>
+                                <option value="college">🏫 College</option>
+                            </select>
+                        </div>
 
-                    {/* Password */}
-                    <div className="mb-3">
-                        <label className="form-label">Password</label>
-                        <input type="password" className="form-control" />
-                    </div>
+                        {/* Email/Mobile */}
+                        <div className="mb-3">
+                            <label className="form-label">Email or Mobile</label>
+                            <input type="text" className="form-control" />
+                        </div>
 
-                    <button className="btn btn-primary w-100 mb-3">Login</button>
+                        {/* Password */}
+                        <div className="mb-3">
+                            <label className="form-label">Password</label>
+                            <input type="password" className="form-control" />
+                        </div>
 
-                    <p className="text-center mb-0">
-                        Don’t have an account?{" "}
-                        <Link to="/register" className="fw-bold text-success">
-                            Register
-                        </Link>
-                    </p>
-                </form>
+                        <button className="btn btn-primary w-100">Login</button>
+                    </form>
+                </div>
             </div>
         </div>
     );

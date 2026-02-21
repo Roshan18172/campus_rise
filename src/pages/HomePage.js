@@ -7,17 +7,17 @@ const HomePage = () => {
         <div>
             {/* 🔹 Hero Section */}
             <section
-                className="text-center text-white d-flex align-items-center"
+                className="text-center text-white d-flex align-items-center m-2 border-0 text-white rounded-5"
                 style={{
-                    background: "linear-gradient(145deg, #c0eb25, #6ebae2)",
+                    background: "linear-gradient(145deg, #1c3d1d, #1c1d1d,#1c2d1d)",
                     minHeight: "65vh",
                 }}
             >
                 <div className="container ">
-                    <img src={campusriselogo} alt="CampusRise Logo" width="480" className="mb-1" />
+                    <img src={campusriselogo} alt="CampusRise Logo" width="600" className="mb-1" />
 
-                    <h1 className="fw-bold">CampusRise</h1>
-                    <p className="lead">Elevating Campus Talent to Careers</p>
+                    {/* <h1 className="fw-bold">CampusRise</h1> */}
+                    {/* <p className="lead text-dark">Elevating Campus Talent to Careers</p> */}
 
                     <div className="mt-4">
                         <Link to="/register" className="btn btn-light btn-lg me-3">
@@ -31,7 +31,11 @@ const HomePage = () => {
             </section>
 
             {/* 🔹 Features */}
-            <section className="py-5 bg-light">
+            <section className="py-5 bg-light m-2 border-0 text-white rounded-5"
+            style={{
+                    background: "linear-gradient(145deg, #225fd0, #139344,#1c2d1d)",
+                    minHeight: "65vh",
+                }}>
                 <div className="container text-center">
                     <h2 className="fw-bold mb-5">Platform Features</h2>
 
@@ -73,7 +77,12 @@ const HomePage = () => {
             </section>
 
             {/* 🔹 Role Section */}
-            <section className="py-5">
+            <section className="py-5 m-2 border-0 text-white rounded-5 " 
+            style={{
+                    background: "linear-gradient(145deg, #cd24c2, #193eb0,#1c2d1d)",
+                    minHeight: "65vh",
+                }}
+            >
                 <div className="container text-center">
                     <h2 className="fw-bold mb-5">Who Can Use CampusRise?</h2>
 
@@ -95,21 +104,12 @@ const HomePage = () => {
                         <div className="col-md-4">
                             <div className="card p-4 shadow border-0">
                                 <h4>🏫 Colleges</h4>
-                                <p>Manage campus drives and student placement analytics.</p>
+                                <p>Manage campus drives and student placement.</p>
                             </div>
                         </div>
                     </div>
                 </div>
             </section>
-
-            {/* 🔹 Footer */}
-            <footer className="bg-dark text-white text-center py-3">
-                <div className="container">
-                    <p className="mb-0">
-                        © {new Date().getFullYear()} CampusRise — Elevating Campus Talent to Careers
-                    </p>
-                </div>
-            </footer>
         </div>
     );
 };
