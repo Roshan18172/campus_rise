@@ -1,0 +1,68 @@
+const express = require("express");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const Student = require("../models/Student");
+
+const router = express.Router();
+const JWT_SECRET = "mysecretkey";
+
+
+// 🔹 REGISTER STUDENT
+router.post("/register", async (req, res) => {
+    try {
+        const { phone, password } = req.body;
+
+        let student = await Student.findOne({ phone, role: "student" });
+
+        if (!student || !student.isVerified) {
+            return res.json({ success: false, msg: "Verify OTP first" });
+        }
+
+        const salt = await bcrypt.genSalt(10);
+        student.password = await bcrypt.hash(password, salt);
+
+        await student.save();
+
+        const token = jwt.sign(
+            { id: student._id, role: "student" },
+            JWT_SECRET,
+            { expiresIn: "2h" }
+        );
+
+        res.json({ success: true, token, data: student });
+    } catch (err) {
+        res.status(500).json({ msg: "Server Error" });
+    }
+});
+
+
+// 🔹 LOGIN STUDENT (MOBILE)
+router.post("/login", async (req, res) => {
+    try {
+        const { phone, password } = req.body;
+
+        const student = await Student.findOne({ phone, role: "student" });
+
+        if (!student) {
+            return res.json({ success: false, msg: "Invalid Credentials" });
+        }
+
+        const isMatch = await bcrypt.compare(password, student.password);
+
+        if (!isMatch) {
+            return res.json({ success: false, msg: "Invalid Credentials" });
+        }
+
+        const token = jwt.sign(
+            { id: student._id, role: "student" },
+            JWT_SECRET,
+            { expiresIn: "2h" }
+        );
+
+        res.json({ success: true, token, data: student });
+    } catch (err) {
+        res.status(500).json({ msg: "Server Error" });
+    }
+});
+
+module.exports = router;
