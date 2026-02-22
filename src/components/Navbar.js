@@ -40,6 +40,9 @@ export default function Navbar() {
                                 <Link className="nav-link active" to="/login">Login</Link>
                             </li>
                             <li className="nav-item">
+                                <Link className="nav-link active" to="/student-dashboard">Student Dashboard</Link>
+                            </li>
+                            <li className="nav-item">
                                 <Link className="btn btn-success ms-2" to="/register">
                                     Register
                                 </Link>

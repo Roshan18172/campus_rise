@@ -1,12 +1,22 @@
 import React from "react";
 import campusriselogo from "../campusriselogo.png"; // 🔁 put your CampusRise logo here
 import { Link } from "react-router-dom";
+import { motion } from 'framer-motion';
 
 const HomePage = () => {
+    document.title = "Home | CampusRise";
+    // Define the animation variant
+    const fadeInUp = {
+        initial: { opacity: 0, y: 60 },
+        whileInView: { opacity: 1, y: 0 },
+        viewport: { once: true, amount: 0.2 },
+        transition: { duration: 0.8, ease: "easeOut" }
+    };
     return (
         <div>
             {/* 🔹 Hero Section */}
-            <section
+            <motion.section 
+                {...fadeInUp} 
                 className="text-center text-white d-flex align-items-center m-2 border-0 text-white rounded-5"
                 style={{
                     background: "linear-gradient(145deg, #1c3d1d, #1c1d1d,#1c2d1d)",
@@ -28,11 +38,12 @@ const HomePage = () => {
                         </a>
                     </div>
                 </div>
-            </section>
+            </motion.section>
 
             {/* 🔹 Features */}
-            <section className="py-5 bg-light m-2 border-0 text-white rounded-5"
-            style={{
+            <motion.section
+                {...fadeInUp} className="py-5 bg-light m-2 border-0 text-white rounded-5"
+                style={{
                     background: "linear-gradient(145deg, #225fd0, #139344,#1c2d1d)",
                     minHeight: "65vh",
                 }}>
@@ -74,11 +85,12 @@ const HomePage = () => {
                         </div>
                     </div>
                 </div>
-            </section>
+            </motion.section>
 
             {/* 🔹 Role Section */}
-            <section className="py-5 m-2 border-0 text-white rounded-5 " 
-            style={{
+            <motion.section
+                {...fadeInUp} className="py-5 m-2 border-0 text-white rounded-5 "
+                style={{
                     background: "linear-gradient(145deg, #cd24c2, #193eb0,#1c2d1d)",
                     minHeight: "65vh",
                 }}
@@ -109,7 +121,7 @@ const HomePage = () => {
                         </div>
                     </div>
                 </div>
-            </section>
+            </motion.section>
         </div>
     );
 };
