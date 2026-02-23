@@ -9,6 +9,8 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import Footer from './components/Footer';
 import StudentDashboard from './pages/Student/StudentDashboard';
+import CollegeDashboard from './pages/College/CollegeDashboard';
+import CompanyDashboard from './pages/Company/CompanyDashboard';
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -23,6 +25,8 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/student-dashboard" element={<StudentDashboard />} />
+          <Route path="/college-dashboard" element={<CollegeDashboard />} />
+          <Route path="/company-dashboard" element={<CompanyDashboard />} />
         </Routes>
       <Footer />
       </Router>
