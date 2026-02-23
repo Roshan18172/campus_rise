@@ -101,7 +101,7 @@ const RegisterPage = () => {
                         </div>
 
                         {/* Mobile + Send OTP SIDE BY SIDE */}
-                        {role !== "company" && (
+                       
                             <div className="row mb-1">
                                 <div className="col-md-8">
                                     <label className="form-label">Mobile Number</label>
@@ -129,7 +129,6 @@ const RegisterPage = () => {
                                     )}
                                 </div>
                             </div>
-                        )}
 
                         {/* OTP INPUT + VERIFY */}
                         {otpSent && role !== "company" && (

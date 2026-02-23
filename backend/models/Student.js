@@ -1,47 +1,39 @@
 const mongoose = require("mongoose");
 
-const studentSchema = new mongoose.Schema(
-    {
-        name: { type: String, required: true },
+const studentSchema = new mongoose.Schema({
+    name: String,
 
-        email: {
-            type: String,
-            required: true,
-            unique: true,
-            lowercase: true,
-        },
-
-        phone: {
-            type: String,
-            required: true,
-            unique: true,
-        },
-
-        password: {
-            type: String,
-            required: true,
-        },
-
-        isVerified: {
-            type: Boolean,
-            default: false,
-        },
-
-        otp: String,
-        otpExpires: Date,
-
-        role: {
-            type: String,
-            default: "student",
-        },
-
-        resume: String,
-        skills: [String],
-        collegeName: String,
-        course: String,
-        year: String,
+    email: {
+        type: String,
+        required: false,   // ⚠️ make optional for OTP stage
+        unique: true,
+        sparse: true
     },
-    { timestamps: true }
-);
+
+    phone: {
+        type: String,
+        required: true,
+        unique: true,
+        sparse: true
+    },
+
+    password: {
+        type: String,
+        required: false   // ⚠️ set during register
+    },
+
+    otp: String,
+    otpExpires: Date,
+
+    isVerified: {
+        type: Boolean,
+        default: false
+    },
+
+    role: {
+        type: String,
+        default: "student"
+    }
+}, { timestamps: true });
 
 module.exports = mongoose.model("Student", studentSchema);

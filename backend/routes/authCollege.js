@@ -7,44 +7,68 @@ const router = express.Router();
 const JWT_SECRET = "mysecretkey";
 
 router.post("/register", async (req, res) => {
-    try {
-        const { phone, password } = req.body;
+  try {
+    const { phone, email, password } = req.body;
 
-        let college = await College.findOne({ phone, role: "college" });
+    console.log(req.body); // 🔍 debug
 
-        if (!college || !college.isVerified) {
-            return res.json({ success: false, msg: "Verify OTP first" });
-        }
+    let college = await College.findOne({ phone, role: "college" });
 
-        const salt = await bcrypt.genSalt(10);
-        college.password = await bcrypt.hash(password, salt);
-
-        await college.save();
-
-        const token = jwt.sign(
-            { id: college._id, role: "college" },
-            JWT_SECRET,
-            { expiresIn: "2h" }
-        );
-
-        res.json({ success: true, token, data: college });
-    } catch (err) {
-        res.status(500).json({ msg: "Server Error" });
+    if (!college || !college.isVerified) {
+      return res.json({ success: false, msg: "Verify OTP first" });
     }
+
+    // ✅ Update email only if provided
+    if (email && email.trim() !== "") {
+      college.email = email.trim();
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    college.password = await bcrypt.hash(password, salt);
+
+    // 🔴 Important if schema had no email earlier
+    college.markModified("email");
+
+    await college.save();
+
+    const token = jwt.sign(
+      { id: college._id, role: "college" },
+      JWT_SECRET,
+      { expiresIn: "2h" }
+    );
+
+    res.json({ success: true, token, data: college });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ msg: "Server Error" });
+  }
 });
+
 
 router.post("/login", async (req, res) => {
     try {
-        const { phone, password } = req.body;
+        const { email, phone, password } = req.body;
 
-        const college = await College.findOne({ phone, role: "college" });
+        if ((!email && !phone) || !password) {
+            return res.json({
+                success: false,
+                msg: "Email or Phone and Password required"
+            });
+        }
 
-        if (!college) return res.json({ success: false, msg: "Invalid Credentials" });
+        const college = await College.findOne({
+            $or: [{ email }, { phone }]
+        });
 
-        const isMatch = await bcrypt.compare(password, college.password);
-
-        if (!isMatch)
+        if (!college) {
             return res.json({ success: false, msg: "Invalid Credentials" });
+        }
+
+        const isMatch = await bcrypt.compare(password, college.password || "");
+        if (!isMatch) {
+            return res.json({ success: false, msg: "Invalid Credentials" });
+        }
 
         const token = jwt.sign(
             { id: college._id, role: "college" },
@@ -53,9 +77,12 @@ router.post("/login", async (req, res) => {
         );
 
         res.json({ success: true, token, data: college });
+
     } catch (err) {
+        console.error(err);
         res.status(500).json({ msg: "Server Error" });
     }
 });
+
 
 module.exports = router;

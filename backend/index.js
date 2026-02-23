@@ -9,7 +9,6 @@ app.get('/', (req, res) => {
     }   );
 app.use(cors());
 app.use(express.json()); // Middleware to parse JSON bodies
-// app.use("/uploads", express.static("uploads"));
 
 app.use("/api/otp", require("./routes/otpService"));
 
