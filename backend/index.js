@@ -10,11 +10,13 @@ app.get('/', (req, res) => {
 app.use(cors());
 app.use(express.json()); // Middleware to parse JSON bodies
 
+app.use("/uploads", express.static("uploads"));
 app.use("/api/otp", require("./routes/otpService"));
 
 app.use("/api/student", require("./routes/authStudent"));
 app.use("/api/college", require("./routes/authCollege"));
 app.use("/api/company", require("./routes/authCompany"));
+app.use("/api/stud_profile", require("./routes/studentProfileRoutes"));
 
 app.listen(PORT, () => {   
     console.log(`CampusRise Server is running on port http://localhost:${PORT}`);

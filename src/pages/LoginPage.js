@@ -35,6 +35,7 @@ const LoginPage = () => {
 
                 localStorage.setItem("token", res.data.token);
                 localStorage.setItem("role", role);
+                localStorage.setItem("userId", res.data.data._id); 
 
                 window.location.href = `/${role}-dashboard`;
             } else {
