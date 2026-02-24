@@ -6,10 +6,10 @@ export default function Navbar() {
     const token = localStorage.getItem("token");
     const role = localStorage.getItem("role");
 
-    const logout = () => {
-        localStorage.clear();
-        window.location.href = "/login";
-    };
+    // const logout = () => {
+    //     localStorage.clear();
+    //     window.location.href = "/login";
+    // };
 
     return (
         <div className="sticky-top">
@@ -80,11 +80,11 @@ export default function Navbar() {
                                         </Link>
                                     </li>
 
-                                    <li className="nav-item">
+                                    {/* <li className="nav-item">
                                         <button onClick={logout} className="btn btn-danger ms-2">
                                             Logout
                                         </button>
-                                    </li>
+                                    </li> */}
                                 </>
                             )}
 
