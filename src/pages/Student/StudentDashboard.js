@@ -18,11 +18,7 @@ const StudentDashboard = () => {
                 <Routes>
 
                     {/* 🔹 Dashboard Home */}
-                    <Route
-                        path="/"
-                        element={
-                            <StudDashContent />
-                        }
+                    <Route ath="/" lement={<StudDashContent />}
                     />
 
                     {/* 🔹 Profile Page */}
