@@ -19,6 +19,7 @@ app.use("/api/company", require("./routes/authCompany"));
 app.use("/api/stud_profile", require("./routes/studentProfileRoutes"));
 app.use("/api/college_profile", require("./routes/collegeProfileRoutes"));
 app.use("/api/college-students", require("./routes/collegeStudents"));
+app.use("/api/company-profile", require("./routes/companyProfileRoutes"));
 
 
 app.listen(PORT, () => {   

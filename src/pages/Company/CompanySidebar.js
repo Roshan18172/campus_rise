@@ -10,7 +10,7 @@ const CompanySidebar = () => {
     const location = useLocation();
 
     const userId = localStorage.getItem("userId");
-    const API = "http://localhost:5000/api/company_profile";
+    const API = "http://localhost:5000/api/company-profile";
 
     useEffect(() => {
         const fetchCompanyProfile = async () => {

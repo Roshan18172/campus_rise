@@ -32,7 +32,17 @@ const companySchema = new mongoose.Schema({
     role: {
         type: String,
         default: "company"
-    }
+    },
+    /* 🔹 PROFILE FIELDS */
+    logo: String,
+    location: String,
+    website: String,
+    about: String,
+    /* 🔹 JOB ROLES */
+    job_roles: {
+        type: [String],
+        default: [],
+    },
 }, { timestamps: true });
 
 module.exports = mongoose.model("Company", companySchema);

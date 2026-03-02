@@ -3,14 +3,12 @@ import axios from "axios";
 
 const CompanyProfile = () => {
     const userId = localStorage.getItem("userId");
-    const API = "http://localhost:5000/api/company_profile";
+    const API = "http://localhost:5000/api/company-profile";
 
     const [company, setCompany] = useState({});
     const [showModal, setShowModal] = useState(false);
     const [showAboutModal, setShowAboutModal] = useState(false);
     const [logoFile, setLogoFile] = useState(null);
-
-    const [newRecruiter, setNewRecruiter] = useState("");
     const [newRole, setNewRole] = useState("");
 
     /* ---------------- FETCH COMPANY ---------------- */
@@ -51,37 +49,39 @@ const CompanyProfile = () => {
         fetchCompany();
     };
 
-    /* ---------------- RECRUITERS ---------------- */
-    const addRecruiter = async () => {
-        if (!newRecruiter) return;
-
-        await axios.post(`${API}/add-recruiter/${userId}`, {
-            recruiter: newRecruiter,
-        });
-        setNewRecruiter("");
-        fetchCompany();
-    };
-
-    const deleteRecruiter = async (index) => {
-        await axios.delete(`${API}/delete-recruiter/${userId}/${index}`);
-        fetchCompany();
-    };
-
     /* ---------------- JOB ROLES ---------------- */
+    /* ---------------- FETCH JOB ROLES ---------------- */
+    const fetchJobRoles = async () => {
+        const res = await axios.get(`${API}/job-roles/${userId}`);
+        setCompany((prev) => ({ ...prev, job_roles: res.data.job_roles }));
+    };
+
+    /* CALL BOTH */
+    useEffect(() => {
+        fetchCompany();
+        fetchJobRoles();
+        // eslint-disable-next-line
+    }, []);
+
     const addRole = async () => {
-        if (!newRole) return;
+        if (!newRole.trim()) return;
 
-        await axios.post(`${API}/add-role/${userId}`, {
-            role: newRole,
-        });
+        await axios.post(`${API}/add-job-role/${userId}`,
+            { jobRole: newRole }
+        );
+
         setNewRole("");
-        fetchCompany();
+        fetchJobRoles();
     };
 
-    const deleteRole = async (index) => {
-        await axios.delete(`${API}/delete-role/${userId}/${index}`);
-        fetchCompany();
+
+    const deleteRole = async (role) => {
+        await axios.delete( `${API}/delete-job-role/${userId}`,
+            { data: { jobRole: role } }   // ⚠️ axios delete body
+        );
+        fetchJobRoles();
     };
+
 
     return (
         <div className="container-fluid">
@@ -138,43 +138,12 @@ const CompanyProfile = () => {
                         </div>
                     </div>
 
-                    {/* 🔹 RECRUITERS */}
-                    <div className="card shadow-sm mb-4">
-                        <div className="card-header fw-bold d-flex justify-content-between">
-                            Recruiters
-                            <div>
-                                <input type="text" className="form-control d-inline w-auto me-2" placeholder="Add recruiter"
-                                    value={newRecruiter}
-                                    onChange={(e) => setNewRecruiter(e.target.value)}
-                                />
-                                <button className="btn btn-success" onClick={addRecruiter}>
-                                    Add
-                                </button>
-                            </div>
-                        </div>
-
-                        <div className="card-body">
-                            {company.recruiters?.length > 0 ? (
-                                company.recruiters.map((rec, index) => (
-                                    <span key={index} className="badge bg-primary me-2 p-2">
-                                        {rec}
-                                        <button className="btn btn-sm btn-danger ms-2"
-                                            onClick={() => deleteRecruiter(index)}> ✕
-                                        </button>
-                                    </span>
-                                ))
-                            ) : (
-                                <p>No recruiters added</p>
-                            )}
-                        </div>
-                    </div>
-
                     {/* 🔹 JOB ROLES */}
                     <div className="card shadow-sm mb-4">
-                        <div className="card-header fw-bold d-flex justify-content-between">
-                            Job Roles
-                            <div>
-                                <input type="text" className="form-control d-inline w-auto me-2" placeholder="Add role"
+                        <div className="card-header fw-bold d-flex justify-content-between align-items-center">
+                            <span>Job Roles</span>
+                            <div className="d-flex">
+                                <input type="text" className="form-control me-2" placeholder="Add role"
                                     value={newRole}
                                     onChange={(e) => setNewRole(e.target.value)}
                                 />
@@ -185,12 +154,16 @@ const CompanyProfile = () => {
                         </div>
 
                         <div className="card-body">
-                            {company.roles?.length > 0 ? (
-                                company.roles.map((role, index) => (
-                                    <span key={index} className="badge bg-success me-2 p-2">
+                            {company.job_roles?.length > 0 ? (
+                                company.job_roles.map((role, index) => (
+                                    <span key={index} className="badge bg-primary me-2 mb-2 p-2">
                                         {role}
-                                        <button className="btn btn-sm btn-danger ms-2"
-                                            onClick={() => deleteRole(index)} > ✕ </button>
+                                        <button
+                                            className="btn btn-sm btn-danger ms-2"
+                                            onClick={() => deleteRole(role)}
+                                        >
+                                            ✕
+                                        </button>
                                     </span>
                                 ))
                             ) : (
@@ -198,6 +171,7 @@ const CompanyProfile = () => {
                             )}
                         </div>
                     </div>
+
 
                 </div>
             </div>
@@ -230,7 +204,7 @@ const CompanyProfile = () => {
                                     value={company.website || ""}
                                     onChange={(e) =>
                                         setCompany({ ...company, website: e.target.value })
-                                    }/>
+                                    } />
                             </div>
 
                             <div className="modal-footer">
@@ -262,7 +236,7 @@ const CompanyProfile = () => {
                                 <textarea className="form-control" rows="4" value={company.about || ""}
                                     onChange={(e) =>
                                         setCompany({ ...company, about: e.target.value })
-                                    }/>
+                                    } />
                             </div>
 
                             <div className="modal-footer">
