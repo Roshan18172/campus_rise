@@ -7,13 +7,20 @@ const CollegeProfile = () => {
 
     const [college, setCollege] = useState({});
     const [showModal, setShowModal] = useState(false);
+    const [showNoticeModal, setShowNoticeModal] = useState(false);
     const [logoFile, setLogoFile] = useState(null);
     const [newCourse, setNewCourse] = useState("");
-    const [newNotice, setNewNotice] = useState("");
+
+    const [newNotice, setNewNotice] = useState({
+        noticeNo: "",
+        title: "",
+        content: "",
+        date: "",
+    });
 
     useEffect(() => {
         fetchCollege();
-        //eslint-disable-next-line
+        // eslint-disable-next-line
     }, []);
 
     const fetchCollege = async () => {
@@ -32,7 +39,6 @@ const CollegeProfile = () => {
     const handleLogoUpload = async () => {
         const formData = new FormData();
         formData.append("logo", logoFile);
-
         await axios.put(`${API}/upload-logo/${userId}`, formData);
         fetchCollege();
     };
@@ -50,11 +56,11 @@ const CollegeProfile = () => {
         fetchCollege();
     };
 
-    // 🔹 Add Notice
+    // 🔹 Add Notice (from modal)
     const addNotice = async () => {
-        if (!newNotice) return;
-        await axios.post(`${API}/add-notice/${userId}`, { notice: newNotice });
-        setNewNotice("");
+        await axios.post(`${API}/add-notice/${userId}`, newNotice);
+        setNewNotice({ noticeNo: "", title: "", content: "", date: "" });
+        setShowNoticeModal(false);
         fetchCollege();
     };
 
@@ -66,13 +72,11 @@ const CollegeProfile = () => {
     return (
         <div className="container-fluid">
             <div className="row">
-
                 <div className="col-md-10 offset-md-2 p-4">
 
                     {/* 🔹 HEADER */}
                     <div className="card shadow-sm mb-4">
                         <div className="card-body d-flex align-items-center justify-content-between">
-
                             <div className="d-flex align-items-center">
                                 <img
                                     src={
@@ -84,7 +88,6 @@ const CollegeProfile = () => {
                                     className="rounded-circle me-3"
                                     style={{ width: "100px", height: "100px", objectFit: "cover" }}
                                 />
-
                                 <div>
                                     <h4 className="mb-0">{college.collegeName}</h4>
                                     <small className="text-muted">{college.email}</small>
@@ -92,27 +95,21 @@ const CollegeProfile = () => {
                                 </div>
                             </div>
 
-                            <button
-                                className="btn btn-primary"
-                                onClick={() => setShowModal(true)}
-                            >
+                            <button className="btn btn-primary" onClick={() => setShowModal(true)}>
                                 Edit Profile
                             </button>
                         </div>
 
-                        {/* 🔹 Upload Logo */}
+                        {/* Upload Logo */}
                         <div className="card-footer">
-                            <input
-                                type="file"
-                                onChange={(e) => setLogoFile(e.target.files[0])}
-                            />
+                            <input type="file" onChange={(e) => setLogoFile(e.target.files[0])} />
                             <button className="btn btn-success ms-2" onClick={handleLogoUpload}>
                                 Upload Logo
                             </button>
                         </div>
                     </div>
 
-                    {/* 🔹 ABOUT SECTION */}
+                    {/* 🔹 ABOUT */}
                     <div className="card shadow-sm mb-4">
                         <div className="card-header fw-bold">About College</div>
                         <div className="card-body">
@@ -120,7 +117,7 @@ const CollegeProfile = () => {
                         </div>
                     </div>
 
-                    {/* 🔹 COURSES SECTION */}
+                    {/* 🔹 COURSES */}
                     <div className="card shadow-sm mb-4">
                         <div className="card-header fw-bold d-flex justify-content-between">
                             Courses
@@ -132,9 +129,7 @@ const CollegeProfile = () => {
                                     value={newCourse}
                                     onChange={(e) => setNewCourse(e.target.value)}
                                 />
-                                <button className="btn btn-success" onClick={addCourse}>
-                                    Add
-                                </button>
+                                <button className="btn btn-success" onClick={addCourse}>Add</button>
                             </div>
                         </div>
 
@@ -157,38 +152,37 @@ const CollegeProfile = () => {
                         </div>
                     </div>
 
-                    {/* 🔹 NOTICES SECTION */}
+                    {/* 🔹 NOTICES */}
                     <div className="card shadow-sm mb-4">
                         <div className="card-header fw-bold d-flex justify-content-between">
                             Notices
-                            <div>
-                                <input
-                                    type="text"
-                                    className="form-control d-inline w-auto me-2"
-                                    placeholder="Post notice"
-                                    value={newNotice}
-                                    onChange={(e) => setNewNotice(e.target.value)}
-                                />
-                                <button className="btn btn-success" onClick={addNotice}>
-                                    Post
-                                </button>
-                            </div>
+                            <button
+                                className="btn btn-success"
+                                onClick={() => setShowNoticeModal(true)}
+                            >
+                                ➕
+                            </button>
                         </div>
 
                         <div className="card-body">
                             {college.notices?.length > 0 ? (
                                 college.notices.map((notice, index) => (
-                                    <div
-                                        key={index}
-                                        className="alert alert-info d-flex justify-content-between align-items-center"
-                                    >
-                                        {notice}
-                                        <button
-                                            className="btn btn-sm btn-danger"
-                                            onClick={() => deleteNotice(index)}
-                                        >
-                                            Delete
-                                        </button>
+                                    <div key={index} className="card mb-3 border-info">
+                                        <div className="card-body">
+                                            <div className="d-flex justify-content-between">
+                                                <h6 className="fw-bold">
+                                                    {notice.noticeNo} - {notice.title}
+                                                </h6>
+                                                <small>{notice.date}</small>
+                                            </div>
+                                            <p className="mb-2">{notice.content}</p>
+                                            <button
+                                                className="btn btn-sm btn-danger"
+                                                onClick={() => deleteNotice(index)}
+                                            >
+                                                Delete
+                                            </button>
+                                        </div>
                                     </div>
                                 ))
                             ) : (
@@ -199,66 +193,110 @@ const CollegeProfile = () => {
                 </div>
             </div>
 
-            {/* 🔹 EDIT MODAL */}
+            {/* 🔹 EDIT PROFILE MODAL */}
             {showModal && (
-                <div className="modal show d-block">
-                    <div className="modal-dialog">
-                        <div className="modal-content">
+                <Modal title="Edit College Profile" onClose={() => setShowModal(false)}>
+                    <input
+                        className="form-control mb-2"
+                        placeholder="College Name"
+                        value={college.collegeName || ""}
+                        onChange={(e) =>
+                            setCollege({ ...college, collegeName: e.target.value })
+                        }
+                    />
 
-                            <div className="modal-header">
-                                <h5>Edit College Profile</h5>
-                                <button
-                                    className="btn-close"
-                                    onClick={() => setShowModal(false)}
-                                ></button>
-                            </div>
+                    <input
+                        className="form-control mb-2"
+                        placeholder="Location"
+                        value={college.location || ""}
+                        onChange={(e) =>
+                            setCollege({ ...college, location: e.target.value })
+                        }
+                    />
 
-                            <div className="modal-body">
-                                <input
-                                    type="text"
-                                    className="form-control mb-2"
-                                    placeholder="College Name"
-                                    value={college.collegeName || ""}
-                                    onChange={(e) =>
-                                        setCollege({ ...college, collegeName: e.target.value })
-                                    }
-                                />
+                    <textarea
+                        className="form-control mb-2"
+                        placeholder="About"
+                        value={college.about || ""}
+                        onChange={(e) =>
+                            setCollege({ ...college, about: e.target.value })
+                        }
+                    />
 
-                                <input
-                                    type="text"
-                                    className="form-control mb-2"
-                                    placeholder="Location"
-                                    value={college.location || ""}
-                                    onChange={(e) =>
-                                        setCollege({ ...college, location: e.target.value })
-                                    }
-                                />
+                    <button className="btn btn-primary" onClick={handleUpdate}>
+                        Save
+                    </button>
+                </Modal>
+            )}
 
-                                <textarea
-                                    className="form-control"
-                                    placeholder="About College"
-                                    value={college.about || ""}
-                                    onChange={(e) =>
-                                        setCollege({ ...college, about: e.target.value })
-                                    }
-                                />
-                            </div>
+            {/* 🔹 NOTICE MODAL */}
+            {showNoticeModal && (
+                <Modal title="Post Notice" onClose={() => setShowNoticeModal(false)}>
+                    <input
+                        className="form-control mb-2"
+                        placeholder="Notice No"
+                        value={newNotice.noticeNo}
+                        onChange={(e) =>
+                            setNewNotice({ ...newNotice, noticeNo: e.target.value })
+                        }
+                    />
 
-                            <div className="modal-footer">
-                                <button className="btn btn-secondary" onClick={() => setShowModal(false)}>
-                                    Cancel
-                                </button>
-                                <button className="btn btn-primary" onClick={handleUpdate}>
-                                    Save Changes
-                                </button>
-                            </div>
+                    <input
+                        className="form-control mb-2"
+                        placeholder="Title"
+                        value={newNotice.title}
+                        onChange={(e) =>
+                            setNewNotice({ ...newNotice, title: e.target.value })
+                        }
+                    />
 
-                        </div>
+                    <textarea
+                        className="form-control mb-2"
+                        placeholder="Content"
+                        value={newNotice.content}
+                        onChange={(e) =>
+                            setNewNotice({ ...newNotice, content: e.target.value })
+                        }
+                    />
+
+                    <input
+                        type="date"
+                        className="form-control mb-3"
+                        value={newNotice.date}
+                        onChange={(e) =>
+                            setNewNotice({ ...newNotice, date: e.target.value })
+                        }
+                    />
+
+                    <div className="d-flex justify-content-end gap-2">
+                        <button className="btn btn-secondary" onClick={() => setShowNoticeModal(false)}>
+                            Cancel
+                        </button>
+                        <button className="btn btn-success" onClick={addNotice}>
+                            Post
+                        </button>
                     </div>
-                </div>
+                </Modal>
             )}
         </div>
     );
 };
+
+/* 🔹 REUSABLE MODAL */
+const Modal = ({ title, children, onClose }) => (
+    <div className="modal show d-block">
+        <div className="modal-dialog">
+            <div className="modal-content p-3">
+                <div className="d-flex justify-content-between mb-2">
+                    <h5>{title}</h5>
+                    <button className="btn btn-sm btn-danger" onClick={onClose}>
+                        ✕
+                    </button>
+                </div>
+                {children}
+            </div>
+        </div>
+    </div>
+);
 
 export default CollegeProfile;

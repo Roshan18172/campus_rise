@@ -17,6 +17,7 @@ app.use("/api/student", require("./routes/authStudent"));
 app.use("/api/college", require("./routes/authCollege"));
 app.use("/api/company", require("./routes/authCompany"));
 app.use("/api/stud_profile", require("./routes/studentProfileRoutes"));
+app.use("/api/college_profile", require("./routes/collegeProfileRoutes"));
 
 app.listen(PORT, () => {   
     console.log(`CampusRise Server is running on port http://localhost:${PORT}`);

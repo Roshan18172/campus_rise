@@ -1,6 +1,19 @@
 const mongoose = require("mongoose");
 
+const noticeSchema = new mongoose.Schema({
+  noticeNo: String,
+  title: String,
+  content: String,
+  date: String,
+});
+
 const collegeSchema = new mongoose.Schema({
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "College",
+      required: true,
+      unique: true,
+    },
     collegeName: String,
 
     email: {
@@ -33,7 +46,16 @@ const collegeSchema = new mongoose.Schema({
     role: {
         type: String,
         default: "college"
-    }
+    },
+    
+    location: String,
+    about: String,
+
+    logo: String,
+
+    courses: [String],
+
+    notices: [noticeSchema],
 }, { timestamps: true });
 
 module.exports = mongoose.model("College", collegeSchema);
