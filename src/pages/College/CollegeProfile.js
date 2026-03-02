@@ -92,6 +92,7 @@ const CollegeProfile = () => {
                                     <h4 className="mb-0">{college.collegeName}</h4>
                                     <small className="text-muted">{college.email}</small>
                                     <p className="mb-0">{college.location}</p>
+                                    <p className="mb-0">{college.phone}</p>
                                 </div>
                             </div>
 
@@ -202,6 +203,14 @@ const CollegeProfile = () => {
                         value={college.collegeName || ""}
                         onChange={(e) =>
                             setCollege({ ...college, collegeName: e.target.value })
+                        }
+                    />
+                    <input
+                        className="form-control mb-2"
+                        placeholder="Contact No."
+                        value={college.phone || ""}
+                        onChange={(e) =>
+                            setCollege({ ...college, phone: e.target.value })
                         }
                     />
 

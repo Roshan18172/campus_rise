@@ -58,6 +58,13 @@ const StudentProfile = () => {
     useEffect(() => {
         axios.get(`${API}/${userId}`).then((res) => setProfile(res.data));
     }, [userId]);
+    useEffect(() => {
+        axios.get(`${API}/${userId}`).then((res) => setProfile(res.data));
+
+        // 🔹 Fetch colleges for dropdown
+        axios.get("http://localhost:5000/api/college_profile/list")
+            .then((res) => setCollegeList(res.data));
+    }, [userId]);
 
     /* ---------------- UPDATE PERSONAL ---------------- */
     const updateProfile = async () => {
@@ -149,6 +156,8 @@ const StudentProfile = () => {
 
             updatedProfile = res.data;
             setEditEducationIndex(null);
+            setSelectedCollege("");
+            setIsOtherCollege(false);
         } else {
             // 🔹 ADD new education
             const res = await axios.post(
@@ -189,9 +198,19 @@ const StudentProfile = () => {
             score: edu.score || "",
         });
 
-        setEditEducationIndex(index);   // track edit mode
+        // 🔹 Set dropdown correctly
+        if (collegeList.some(c => c.collegeName === edu.college)) {
+            setSelectedCollege(edu.college);
+            setIsOtherCollege(false);
+        } else {
+            setSelectedCollege("Others");
+            setIsOtherCollege(true);
+        }
+
+        setEditEducationIndex(index);
         toggleModal("education");
     };
+
 
 
     /* ---------------- PROJECT ---------------- */
@@ -242,6 +261,10 @@ const StudentProfile = () => {
         setEditProjectIndex(index);
         toggleModal("project");
     };
+    const [collegeList, setCollegeList] = useState([]);
+    const [selectedCollege, setSelectedCollege] = useState("");
+    const [isOtherCollege, setIsOtherCollege] = useState(false);
+
 
     return (
         <div className="container my-4 col-md-10 offset-md-2 min-vh-100" >
@@ -524,14 +547,47 @@ const StudentProfile = () => {
                         }
                     />
 
-                    <input
-                        placeholder="College"
+                    <select
                         className="form-control my-2"
-                        value={newEducation.college}
-                        onChange={(e) =>
-                            setNewEducation({ ...newEducation, college: e.target.value })
-                        }
-                    />
+                        value={selectedCollege}
+                        onChange={(e) => {
+                            const value = e.target.value;
+                            setSelectedCollege(value);
+
+                            if (value === "Others") {
+                                setIsOtherCollege(true);
+                                setNewEducation({ ...newEducation, college: "" });
+                            } else {
+                                setIsOtherCollege(false);
+                                setNewEducation({ ...newEducation, college: value });
+                            }
+                        }}
+                    >
+                        <option value="">Select College</option>
+
+                        {collegeList.map((col, index) => (
+                            <option key={index} value={col.collegeName}>
+                                {col.collegeName}
+                            </option>
+                        ))}
+
+                        <option value="Others">Others</option>
+                    </select>
+
+                    {/* 🔹 SHOW INPUT OUTSIDE SELECT */}
+                    {isOtherCollege && (
+                        <input
+                            type="text"
+                            placeholder="Enter College Name"
+                            className="form-control my-2"
+                            value={newEducation.college}
+                            onChange={(e) =>
+                                setNewEducation({ ...newEducation, college: e.target.value })
+                            }
+                        />
+                    )}
+
+
 
                     <input
                         placeholder="Start Year"

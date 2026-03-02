@@ -3,6 +3,15 @@ const router = express.Router();
 const CollegeProfile = require("../models/College");
 const upload = require("../middleware/uploadLogo");
 
+// 🔹 GET ALL COLLEGES (for dropdown)
+router.get("/list", async (req, res) => {
+    try {
+        const colleges = await CollegeProfile.find({ role: "college" }).select("collegeName");
+        res.json(colleges);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
 
 // 🔹 GET PROFILE
 router.get("/:userId", async (req, res) => {
