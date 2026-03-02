@@ -2,7 +2,7 @@ import React from 'react'
 
 function Footer() {
     return (
-        <div className='sticky-bottom'>
+        <div className='fixed-bottom'>
             {/* 🔹 Footer */}
             <footer className="bg-primary text-white text-center py-0.5">
                 <div className="container">

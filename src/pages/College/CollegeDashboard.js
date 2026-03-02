@@ -3,6 +3,7 @@ import CollegeSidebar from "./CollegeSidebar";
 import CollegeDashContent from "./CollegeDashContent";
 import CollegeProfile from "./CollegeProfile"
 import { Routes, Route } from "react-router-dom";
+import CollegeStudents from "./CollegeStudents";
 
 
 const CollegeDashboard = () => {
@@ -16,9 +17,9 @@ const CollegeDashboard = () => {
                 <Routes>
                     <Route path="/" element={<CollegeDashContent />} />
                     <Route path="/profile" element={<CollegeProfile />} />
+                    <Route path="/students" element={<CollegeStudents />} />
                     {/* Future routes can be added here */}
                 </Routes>
-                
             </div>
         </div>
     );
