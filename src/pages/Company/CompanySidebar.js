@@ -109,9 +109,9 @@ const CompanySidebar = () => {
                 <li className="nav-item mb-2">
                     <Link
                         className="nav-link text-white"
-                        to="/company-dashboard/jobs"
+                        to="/company-dashboard/my-jobs"
                         onClick={(e) =>
-                            handleSafeNavigation(e, "/company-dashboard/jobs")
+                            handleSafeNavigation(e, "/company-dashboard/my-jobs")
                         }
                     >
                         💼 My Jobs

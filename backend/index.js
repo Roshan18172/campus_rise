@@ -20,6 +20,8 @@ app.use("/api/stud_profile", require("./routes/studentProfileRoutes"));
 app.use("/api/college_profile", require("./routes/collegeProfileRoutes"));
 app.use("/api/college-students", require("./routes/collegeStudents"));
 app.use("/api/company-profile", require("./routes/companyProfileRoutes"));
+app.use("/api/jobs", require("./routes/jobRoutes"));
+app.use("/api/student/jobs", require("./routes/studentJobRoutes"));
 
 
 app.listen(PORT, () => {   
