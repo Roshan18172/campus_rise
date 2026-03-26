@@ -30,7 +30,7 @@ const BrowseJobs = () => {
     const saveJob = async (jobId) => {
         try {
             await axios.post(`${API}/save`, { jobId, studentId });
-            alert("💾 Saved Job");
+            alert("💾 Job Saved");
         } catch (err) {
             alert(err.response?.data?.message || "Error");
         }

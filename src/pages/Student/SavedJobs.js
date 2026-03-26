@@ -16,6 +16,7 @@ const SavedJobs = () => {
                 `http://localhost:5000/api/student/jobs/saved/${studentId}`
             );
 
+            console.log("Saved jobs fetched:", res.data);
             setJobs(res.data);
         } catch (err) {
             console.error("Error fetching saved jobs", err);
@@ -38,8 +39,10 @@ const SavedJobs = () => {
                 `http://localhost:5000/api/student/jobs/saved/${savedId}`
             );
 
-            // refresh list
-            fetchSavedJobs();
+            // update UI instantly (no reload)
+            setJobs((prevJobs) =>
+                prevJobs.filter((job) => job.savedId !== savedId)
+            );
         } catch (err) {
             console.error("Error removing job", err);
         }
@@ -58,57 +61,53 @@ const SavedJobs = () => {
             ) : jobs.length === 0 ? (
                 <p>No saved jobs yet.</p>
             ) : (
-                jobs.map((item) => {
-                    const job = item.jobId; // ✅ IMPORTANT
+                jobs.map((job) => (
+                    <div key={job.savedId} className="card mb-3 shadow-sm">
+                        <div className="card-body">
 
-                    if (!job) return null;
+                            {/* 🔹 JOB TITLE */}
+                            <h5>{job.title}</h5>
 
-                    return (
-                        <div key={item._id} className="card mb-3 shadow-sm">
-                            <div className="card-body">
+                            {/* 🔹 COMPANY */}
+                            <p className="text-muted mb-1">
+                                {job.companyName}
+                            </p>
 
-                                {/* 🔹 JOB TITLE */}
-                                <h5>{job.title}</h5>
+                            {/* 🔹 DESCRIPTION */}
+                            <p className="mb-2">
+                                {job.description}
+                            </p>
 
-                                {/* 🔹 COMPANY */}
-                                <p className="text-muted mb-1">
-                                    {job.companyName}
-                                </p>
+                            {/* 🔹 TAGS */}
+                            <div className="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span className="badge bg-primary me-2">
+                                        {job.location}
+                                    </span>
 
-                                {/* 🔹 DESCRIPTION */}
-                                <p className="mb-2">
-                                    {job.description}
-                                </p>
-
-                                {/* 🔹 TAGS */}
-                                <div className="d-flex justify-content-between align-items-center">
-                                    <div>
-                                        <span className="badge bg-primary me-2">
-                                            {job.location}
-                                        </span>
-
-                                        <span className="badge bg-success me-2">
-                                            {job.salary}
-                                        </span>
-
-                                        <span className="badge bg-warning text-dark">
-                                            {job.type}
-                                        </span>
-                                    </div>
-
-                                    {/* 🔹 REMOVE BUTTON */}
-                                    <button
-                                        className="btn btn-danger btn-sm"
-                                        onClick={() => removeJob(item._id)} // ✅ savedId
-                                    >
-                                        Remove
-                                    </button>
+                                    <span className="badge bg-success me-2">
+                                        {job.salary}
+                                    </span>
+                                    <span className="badge bg-info text-dark me-2">
+                                        {job.skills?.join(", ")}
+                                    </span>
+                                    <span className="badge bg-warning text-dark">
+                                        {job.jobType}
+                                    </span>
                                 </div>
 
+                                {/* 🔹 REMOVE BUTTON */}
+                                <button
+                                    className="btn btn-danger btn-sm"
+                                    onClick={() => removeJob(job.savedId)}
+                                >
+                                    Remove
+                                </button>
                             </div>
+
                         </div>
-                    );
-                })
+                    </div>
+                ))
             )}
         </div>
     );

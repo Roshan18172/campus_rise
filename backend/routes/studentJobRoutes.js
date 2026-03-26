@@ -5,7 +5,7 @@ const Application = require("../models/Application");
 const SavedJob = require("../models/SavedJob");
 
 /* ===============================
-   🔹 GET ALL JOBS (BROWSE)
+   🔹 GET ALL JOBS
 ================================ */
 router.get("/all", async (req, res) => {
     try {
@@ -40,35 +40,43 @@ router.post("/apply", async (req, res) => {
 });
 
 /* ===============================
-   🔹 SAVE JOB
+   🔹 SAVE JOB (FIXED ✅)
 ================================ */
-router.get("/saved/:studentId", async (req, res) => {
+router.post("/save", async (req, res) => {
     try {
-        const saved = await SavedJob.find({ studentId: req.params.studentId })
-            .populate("jobId");
+        const { jobId, studentId } = req.body;
 
-        // ✅ send only jobs
-        const jobs = saved.map(item => ({
-            ...item.jobId._doc,
-            savedId: item._id
-        }));
+        const exists = await SavedJob.findOne({ jobId, studentId });
 
-        res.json(jobs);
+        if (exists) {
+            return res.status(400).json({ message: "Already saved" });
+        }
+
+        const saved = new SavedJob({ jobId, studentId });
+        await saved.save();
+
+        res.json({ message: "Job saved successfully" });
+
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
 });
-
 
 /* ===============================
    🔹 GET SAVED JOBS
 ================================ */
 router.get("/saved/:studentId", async (req, res) => {
     try {
-        const saved = await SavedJob.find({ studentId: req.params.studentId })
-            .populate("jobId");
+        const saved = await SavedJob.find({
+            studentId: req.params.studentId
+        }).populate("jobId");
 
-        res.json(saved);
+        const jobs = saved.map(item => ({
+            ...item.jobId._doc,
+            savedId: item._id
+        }));
+
+        res.json(jobs);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
